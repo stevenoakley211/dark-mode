@@ -9,7 +9,11 @@ import "./styles.scss";
 
 const App = () => {
   const [coinData, setCoinData] = useState([]);
+  const [choosenCoin, setChoosenCoin] = useState(null)
+  const [coinObj, setCoinObj] = useState(coinData)
 
+  
+  
   useEffect(() => {
     axios
       .get(
@@ -18,10 +22,21 @@ const App = () => {
       .then(res => setCoinData(res.data))
       .catch(err => console.log(err));
   }, []);
+
+  useEffect(()=>{
+    if(choosenCoin === null){
+    setCoinObj(coinData)
+  }else{
+    setCoinObj(coinData.filter(coin =>
+      coin.id == choosenCoin
+      
+    ))
+  }},[coinData,choosenCoin])
+
   return (
     <div className="App">
-      <Navbar />
-      <Charts coinData={coinData} />
+      <Navbar setChoosenCoin={setChoosenCoin} coinData={coinData}/>
+      <Charts coinData={coinObj} />
     </div>
   );
 };
